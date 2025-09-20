@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .image-container {
+      min-height: 400px;
+      margin: 50px 0;
+      background: #f0f0f0;
+      position: relative;
+    }
+
+    .controls {
+      position: fixed;
+      z-index: 1;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .lazy-image {
+      width: 100%;
+      min-width: 100%;
+      min-height: 400px;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    .network-indicator {
+      position: fixed;
+      z-index: 1;
+      top: 20px;
+      left: 20px;
+      padding: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="network-indicator">
+    Network Speed: <span id="networkSpeed">Fast 3G</span>
+  </div>
+
+  <div class="controls">
+    <h3>Simulation Controls</h3>
+    <div>
+      <label>Network Speed:</label>
+      <select id="networkSelect">
+        <option value="fast3g">Fast 3G</option>
+        <option value="slow3g">Slow 3G</option>
+        <option value="2g">2G</option>
+      </select>
+    </div>
+    <div style="margin-top: 10px">
+      <button onclick="resetSimulation()">
+        Reset Images
+      </button>
+    </div>
+  </div>
+
+  <div id="imageContainer"></div>
+
+  <script type="module">
+    import LazyImageLoader from './LazyImageLoader.js';
+
+    const loader = new LazyImageLoader({
+      blurEffect: true,
+      loadingIndicator: true,
+      blurAmount: '10px',
+      loadingSpinnerColor: 'green',
+    });
+
+    function generateImages(count = 10) {
+      const $container = document.getElementById('imageContainer');
+      $container.innerHTML = '';
+
+      for (let i = 0; i < count; i++) {
+        const $wrapper = document.createElement('div');
+        $wrapper.className = 'image-container';
+
+        const $img = document.createElement('img');
+        $img.className = 'lazy-image';
+        $img.src = 'https://picsum.photos/800/400';
+        $img.alt = `Lazy loaded image ${i + 1}`;
+
+        $wrapper.appendChild($img);
+        $container.appendChild($wrapper);
+      }
+
+      loader.observe('.lazy-image');
+    }
+
+    document.getElementById('networkSelect').addEventListener('change', function () {
+      document.getElementById('networkSpeed').textContent =
+        this.options[this.selectedIndex].text;
+    });
+
+    function resetSimulation() {
+      generateImages();
+    }
+
+    generateImages();
+  </script>
+</body>
+
+</html>
