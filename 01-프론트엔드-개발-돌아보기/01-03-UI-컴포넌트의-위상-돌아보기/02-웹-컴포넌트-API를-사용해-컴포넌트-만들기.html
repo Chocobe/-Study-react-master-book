@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02 웹 컴포넌트 API를 사용해 컴포넌트 만들기</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: gray;
+    }
+
+    lazy-image {
+      display: flex;
+      justify-content: center;
+      min-height: 400px;
+      align-items: center;
+      position: relative;
+      /* To contain the absolute positioned loader */
+    }
+
+    .network-indicator {
+      position: fixed;
+      z-index: 1;
+      top: 20px;
+      left: 20px;
+      padding: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .controls {
+      position: fixed;
+      z-index: 1;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="network-indicator">
+    Network Speed: <span id="networkSpeed">Fast 3G</span>
+  </div>
+
+  <div class="controls">
+    <h3>Simulation Controls</h3>
+    <div>
+      <label>Network Speed:</label>
+      <select id="networkSelect">
+        <option value="fast3g">Fast 3G</option>
+        <option value="slow3g">Slow 3G</option>
+        <option value="2g">2G</option>
+      </select>
+    </div>
+    <div style="margin-top: 10px;">
+      <button onclick="resetSimulation()">Reset Images</button>
+    </div>
+  </div>
+
+  <lazy-image data-src="https://picsum.photos/800/400" alt="Placeholder Image 1" data-network-speed="fast3g"
+    indicator-color="green" border-radius="10px"></lazy-image>
+  <lazy-image data-src="https://picsum.photos/800/400" alt="Placeholder Image 2" data-network-speed="fast3g"
+    indicator-color="blue" apply-blur border-radius="10px"></lazy-image>
+  <lazy-image data-src="https://picsum.photos/800/400" alt="Placeholder Image 3" data-network-speed="fast3g"
+    indicator-color="red" border-radius="10px"></lazy-image>
+  <lazy-image data-src="https://picsum.photos/800/400" alt="Placeholder Image 4" data-network-speed="fast3g"
+    indicator-color="purple" apply-blur border-radius="10px"></lazy-image>
+  <lazy-image data-src="https://picsum.photos/800/400" alt="Placeholder Image 5" data-network-speed="fast3g"
+    indicator-color="blue" apply-blur border-radius="10px"></lazy-image>
+
+  <script src="02-웹-컴포넌트-API를-사용해-컴포넌트-만들기.js"></script>
+  <script>
+    window.customElements.define('lazy-image', LazyImageLoader);
+
+    function resetSimulation() {
+      const lazyImages = document.querySelectorAll('lazy-image');
+      const networkSpeed = document.querySelector('#networkSelect').value;
+
+      lazyImages.forEach(img => {
+        img.dataset.networkSpeed = networkSpeed;
+        img.reset();
+        img.getObserver().observe(img);
+      });
+    }
+  </script>
+</body>
+
+</html>
